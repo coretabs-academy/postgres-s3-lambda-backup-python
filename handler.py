@@ -1,4 +1,4 @@
-import json, os
+import json, os, datetime, calendar
 import paramiko
 import boto3, botocore
 
@@ -14,7 +14,7 @@ aws_access_key_id = os.environ.get('aws_access_key_id')
 aws_secret_access_key = os.environ.get('aws_secret_access_key')
 
 bucket_name = os.environ.get('bucket_name')
-object_name = os.environ.get('object_name')
+object_name_prefix = os.environ.get('object_name_prefix')
 
 if False:
     try:
@@ -83,6 +83,9 @@ def upload_backup_to_s3():
                             aws_secret_access_key=aws_secret_access_key
                            )
     s3 = session.client('s3')
+
+    now = datetime.datetime.now()
+    object_name = f'{object_name_prefix}_{now.year}_{calendar.month_name[now.month]}_{now.day}.dump'
 
     # delete previous backup
     s3.delete_object(Bucket=bucket_name, Key=object_name)

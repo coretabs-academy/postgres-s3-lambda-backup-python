@@ -65,7 +65,7 @@ aws_access_key_id = 'YOUR AWS ACCESS KEY ID'
 aws_secret_access_key = 'YOUR AWS SECRET ACCESS KEY'
 
 bucket_name = 'your-s3-bucket-name'
-object_name = 'your-s3-object-name'
+object_name_prefix = 'your-s3-object-name-prefix'
 ```
 
 ### Sample `dev_secrets.py` file
@@ -86,7 +86,7 @@ aws_access_key_id = 'YOUR AWS ACCESS KEY ID'
 aws_secret_access_key = 'YOUR AWS SECRET ACCESS KEY'
 
 bucket_name = 'your-s3-bucket-name'
-object_name = 'your-s3-object-name'
+object_name_prefix = 'your-s3-object-name-prefix'
 ```
 
 ## Local Development
