@@ -13,6 +13,12 @@ functions:
           method: get
     # - schedule: rate(10 minutes)
 
+package:
+  exclude:
+    - myssh.pem
+    - dev_secrets.py
+    - .env
+
 plugins:
   - serverless-python-requirements
   - serverless-offline
