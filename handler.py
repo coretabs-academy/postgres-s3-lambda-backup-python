@@ -30,6 +30,9 @@ def connect_ssh():
         os.remove(ssh_key_file_path)
     with open(ssh_key_file_path, 'w') as f:
         f.write(ssh_key)
+    if not os.path.exists(ssh_key_file_path):
+        printer('could NOT write SSH key')
+        return {'statusCode': 500, 'body': 'failed, could NOT write SSH key'}
 
     ssh = paramiko.SSHClient()
     cert = paramiko.RSAKey.from_private_key_file(ssh_key_file_path)
