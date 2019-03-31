@@ -20,9 +20,9 @@ functions:
      - schedule: rate(10 minutes)
 ```
 
-## Local Development
+## Samples
 
-### Creating backup script
+### Backup Script
 
 You backup script might differ from our backup script, so we decided to store it in an env_var.
 
@@ -46,31 +46,6 @@ Once you make sure that your script is working properly in the VPS, convert it i
 ```bash
 sudo rm -f "/var/academy-db/my_new_academy.dump" && sudo rm -f "/home/ec2-user/academy_backup.dump" && sudo docker exec $(sudo docker ps -a | grep db- | awk '{print \$1}') sh -c "db_user -U db_table -Fc academy_db > /var/lib/postgresql/data/my_new_academy.dump" && sudo cp "/var/academy-db/my_new_academy.dump" "/home/ec2-user/academy_backup.dump"
 ```
-
-### Installing dependencies
-
-You need to install the dependencies simply by to be able to do `sls deploy` or `sls offline`:
-
-```bash
-npm install
-```
-
-### Running with SLS Offline
-
-To try the function locally, you will need to change the trigger in the `serverless.yml` file into:
-
-```yml
-functions:
-  main:
-    handler: handler.main
-    events:
-      - http:
-          path: /
-          method: get
-```
-
-After you run `sls offline` in the terminal, you can simply run the function from the browser in the url: [http://localhost:3000](http://localhost:3000)
-
 
 ### Sample `.env` file
 
@@ -113,3 +88,31 @@ aws_secret_access_key = 'YOUR AWS SECRET ACCESS KEY'
 bucket_name = 'your-s3-bucket-name'
 object_name = 'your-s3-object-name'
 ```
+
+## Local Development
+
+
+
+### Installing dependencies
+
+You need to install the dependencies simply by to be able to do `sls deploy` or `sls offline`:
+
+```bash
+npm install
+```
+
+### Running with SLS Offline
+
+To try the function locally, you will need to change the trigger in the `serverless.yml` file into:
+
+```yml
+functions:
+  main:
+    handler: handler.main
+    events:
+      - http:
+          path: /
+          method: get
+```
+
+After you run `sls offline` in the terminal, you can simply run the function from the browser in the url: [http://localhost:3000](http://localhost:3000)
