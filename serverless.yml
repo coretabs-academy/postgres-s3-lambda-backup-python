@@ -1,0 +1,23 @@
+service: postgres-s3-lambda-backup-python
+
+provider:
+  name: aws
+  runtime: python3.7
+
+functions:
+  main:
+    handler: handler.main
+    events:
+      - http:
+          path: /
+          method: get
+    # - schedule: rate(10 minutes)
+
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
