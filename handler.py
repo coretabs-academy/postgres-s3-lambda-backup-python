@@ -58,13 +58,16 @@ def create_backup_on_server_and_copy_it(ssh):
         printer('could NOT delete the previous backup')
         return {'statusCode': 500, 'body': 'failed, previous backup could NOT be deleted locally'}
 
+    sftp = ssh.open_sftp()
+
+    remote_backup_file = sftp.open(backup_remote_path)
     try:
-        sftp = ssh.open_sftp()
-        sftp.get(localpath=backup_local_path, remotepath=backup_remote_path)
-    except:
-        pass
+        with open(backup_local_path, 'wb') as f:
+            f.write(remote_backup_file.read())
     finally:
-        sftp.close()
+        remote_backup_file.close()
+
+    sftp.close()
 
     printer('outputs')
     stdout.channel.recv_exit_status()
