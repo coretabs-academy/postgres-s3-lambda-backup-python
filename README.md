@@ -20,6 +20,8 @@ functions:
      - schedule: rate(10 minutes)
 ```
 
+To see more on scheduling lambda functions, [follow this link](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html)
+
 ## Samples
 
 ### Uploader Script
