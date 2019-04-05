@@ -8,10 +8,11 @@ functions:
   main:
     handler: handler.main
     events:
-      - http:
-          path: /
-          method: get
-    # - schedule: rate(10 minutes)
+    #  - http:
+    #      path: /
+    #      method: get
+    #  - schedule: rate(10 minutes)
+      - schedule: rate(2 days)
 
 package:
   exclude:
