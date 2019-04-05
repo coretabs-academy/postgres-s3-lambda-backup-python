@@ -1,4 +1,1 @@
-requests
 paramiko
-boto3
-pysftp
