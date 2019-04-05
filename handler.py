@@ -1,20 +1,11 @@
-import json, os, datetime, calendar
+import os
 import paramiko
-import boto3, botocore
 
 ssh_key = os.environ.get('ssh_key')
 hostname = os.environ.get('hostname')
 username = os.environ.get('username')
 
-backup_local_path = os.environ.get('backup_local_path')
-backup_remote_path = os.environ.get('backup_remote_path')
 backup_command = os.environ.get('backup_command')
-
-aws_access_key_id = os.environ.get('aws_access_key_id')
-aws_secret_access_key = os.environ.get('aws_secret_access_key')
-
-bucket_name = os.environ.get('bucket_name')
-object_name_prefix = os.environ.get('object_name_prefix')
 
 if False:
     try:
@@ -48,27 +39,6 @@ def create_backup_on_server_and_copy_it(ssh):
 
     stdin, stdout, errors = ssh.exec_command(backup_command)
 
-    # delete previous local backup, try three times
-    three_times_counter = 0
-    while os.path.exists(backup_local_path) and three_times_counter < 3:
-        os.remove(backup_local_path)
-        three_times_counter += 1
-
-    if three_times_counter == 3:
-        printer('could NOT delete the previous backup')
-        return {'statusCode': 500, 'body': 'failed, previous backup could NOT be deleted locally'}
-
-    sftp = ssh.open_sftp()
-
-    remote_backup_file = sftp.open(backup_remote_path)
-    try:
-        with open(backup_local_path, 'wb') as f:
-            f.write(remote_backup_file.read())
-    finally:
-        remote_backup_file.close()
-
-    sftp.close()
-
     printer('outputs')
     stdout.channel.recv_exit_status()
     for line in stdout.readlines():
@@ -81,27 +51,6 @@ def create_backup_on_server_and_copy_it(ssh):
         print(line)
 
 
-def upload_backup_to_s3():
-    session = boto3.Session(aws_access_key_id=aws_access_key_id,
-                            aws_secret_access_key=aws_secret_access_key
-                           )
-    s3 = session.client('s3')
-
-    now = datetime.datetime.now()
-    object_name = f'{object_name_prefix}_{now.year}_{calendar.month_name[now.month]}_{now.day}.dump'
-
-    # delete previous backup
-    s3.delete_object(Bucket=bucket_name, Key=object_name)
-    try:
-        s3.get_object(Bucket=bucket_name, Key=object_name).load()
-    except botocore.exceptions.ClientError as e:
-        if e.response['Error']['Code'] == "404":
-            printer('cleaned s3 previous file')
-    
-    s3.upload_file(backup_local_path, bucket_name, object_name)
-    printer('uploaded successfully to S3, tadaaaa!')
-
-
 def main(event, context):
     printer('connecting ssh...')
     ssh = connect_ssh()
@@ -111,14 +60,10 @@ def main(event, context):
 
     printer('closing ssh...')
     ssh.close()
-    
-    if os.path.exists(backup_local_path):
-        printer('we got the backup, uploading...')
-    upload_backup_to_s3()
 
     response = {
-        "statusCode": 200,
-        "body": 'Successfully uploaded backup'
+        'statusCode': 200,
+        'body': 'Successfully uploaded backup'
     }
 
     return response
