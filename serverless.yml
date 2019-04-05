@@ -3,10 +3,13 @@ service: postgres-s3-lambda-backup-python
 provider:
   name: aws
   runtime: python3.7
+  region: us-east-2
+  versionFunctions: false
 
 functions:
   main:
     handler: handler.main
+    memorySize: 128
     events:
     #  - http:
     #      path: /

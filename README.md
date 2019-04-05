@@ -131,11 +131,11 @@ First, **make sure you filled the file `.env`** with the correct environment var
 Then, simply run this command:
 
 ```bash
-sls deploy --region us-east-2
+sls deploy --stage production
 ```
 
-It will deploy the function on us-east-2 region, to run the function:
+It will deploy the function on us-east-2 region (as specified in the `serverless.yml`), to run the function:
 
 ```bash
-sls invoke -f main --region us-east-2
+sls invoke -f main --stage production
 ```
