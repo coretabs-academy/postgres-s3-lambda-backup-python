@@ -123,3 +123,19 @@ functions:
 ```
 
 After you run `sls offline` in the terminal, you can simply run the function from the browser in the url: [http://localhost:3000](http://localhost:3000)
+
+## Deployment
+
+First, **make sure you filled the file `.env`** with the correct environment variables.
+
+Then, simply run this command:
+
+```bash
+sls deploy --region us-east-2
+```
+
+It will deploy the function on us-east-2 region, to run the function:
+
+```bash
+sls invoke -f main --region us-east-2
+```
